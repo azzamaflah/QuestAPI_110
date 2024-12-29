@@ -48,6 +48,9 @@ class InsertViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
         kelas = kelas,
         angkatan = angkatan
     )
+    fun Mahasiswa.toUiStateMhs(): InsertUiState = InsertUiState(
+        insertUiEvent = toInsertUiEvent()
+    )
 
 
 
