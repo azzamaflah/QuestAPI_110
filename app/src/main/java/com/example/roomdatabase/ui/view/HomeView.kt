@@ -120,7 +120,7 @@ fun HomeStatus(
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
-        modifier = modifier.s   ize(200.dp),
+        modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.loading_img), // Gambar loading
         contentDescription = stringResource(R.string.loading)
     )
