@@ -27,6 +27,7 @@ import com.example.roomdatabase.ui.navigation.DestinasiNavigasi
 import com.example.roomdatabase.ui.viewmodel.InsertUiEvent
 import com.example.roomdatabase.ui.viewmodel.InsertUiState
 import com.example.roomdatabase.ui.viewmodel.InsertViewModel
+import com.example.roomdatabase.ui.viewmodel.PenyediaViewModel
 import kotlinx.coroutines.launch
 
 object DestinasiEntry : DestinasiNavigasi {
