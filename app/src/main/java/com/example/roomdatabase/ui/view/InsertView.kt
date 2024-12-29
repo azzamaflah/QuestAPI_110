@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 object DestinasiEntry : DestinasiNavigasi {
     override val route = "item_entry"
     override val titleRes = "Entry Mhs"
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -171,5 +170,6 @@ fun FormInput(
             thickness = 8.dp,
             modifier = Modifier.padding(12.dp)
         )
+    }
     }
 }

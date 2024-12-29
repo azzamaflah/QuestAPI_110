@@ -2,32 +2,13 @@ package com.example.roomdatabase.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,9 +47,7 @@ fun HomeScreen(
                 title = DestinasiHome.titleRes,
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior,
-                onRefresh = {
-                    viewModel.getMhs()
-                }
+                onRefresh = { viewModel.getMhs() }
             )
         },
         floatingActionButton = {
@@ -83,18 +62,19 @@ fun HomeScreen(
                 )
             }
         },
-    ) { innerPadding ->
-        HomeStatus(
-            homeUiState = viewModel.mhsUIState,
-            retryAction = { viewModel.getMhs() },
-            modifier = Modifier.padding(innerPadding),
-            onDetailClick = onDetailClick,
-            onDeleteClick = {
-                viewModel.deleteMhs(it.nim)
-                viewModel.getMhs()
-            }
-        )
-    }
+        content = { innerPadding ->
+            HomeStatus(
+                homeUiState = viewModel.mhsUIState,
+                retryAction = { viewModel.getMhs() },
+                modifier = Modifier.padding(innerPadding),
+                onDetailClick = onDetailClick,
+                onDeleteClick = {
+                    viewModel.deleteMhs(it.nim)
+                    viewModel.getMhs()
+                }
+            )
+        }
+    )
 }
 
 @Composable
@@ -107,37 +87,34 @@ fun HomeStatus(
 ) {
     when (homeUiState) {
         is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
-        is HomeUiState.Success ->
+        is HomeUiState.Success -> {
             if (homeUiState.mahasiswa.isEmpty()) {
-                Box(
-                    modifier = modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Tidak ada data Kontak")
-                }
+                EmptyData(modifier)
             } else {
                 MhsLayout(
                     mahasiswa = homeUiState.mahasiswa,
                     modifier = modifier.fillMaxWidth(),
-                    onDetailClick = {
-                        onDetailClick(it.nim)
-                    },
-                    onDeleteClick = {
-                        onDeleteClick(it)
-                    }
+                    onDetailClick = { onDetailClick(it.nim) },
+                    onDeleteClick = { onDeleteClick(it) }
                 )
             }
+        }
         is HomeUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
 @Composable
 fun OnLoading(modifier: Modifier = Modifier) {
-    Image(
-        modifier = modifier.size(200.dp),
-        painter = painterResource(R.drawable.loading),
-        contentDescription = stringResource(R.string.loading)
-    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            modifier = Modifier.size(200.dp),
+            painter = painterResource(R.drawable.ic_launcher_background),
+            contentDescription = stringResource(R.string.loading)
+        )
+    }
 }
 
 @Composable
@@ -148,13 +125,26 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.connection_error),
-            contentDescription = ""
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = null
         )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(R.string.loading_failed),
+            modifier = Modifier.padding(16.dp)
+        )
         Button(onClick = retryAction) {
             Text(stringResource(R.string.retry))
         }
+    }
+}
+
+@Composable
+fun EmptyData(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Tidak ada data Kontak")
     }
 }
 
@@ -176,9 +166,7 @@ fun MhsLayout(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onDetailClick(mahasiswa) },
-                onDeleteClick = {
-                    onDeleteClick(mahasiswa)
-                }
+                onDeleteClick = { onDeleteClick(mahasiswa) }
             )
         }
     }
@@ -214,11 +202,11 @@ fun MhsCard(
                         contentDescription = null
                     )
                 }
-                Text(
-                    text = mahasiswa.nim,
-                    style = MaterialTheme.typography.titleMedium
-                )
             }
+            Text(
+                text = mahasiswa.nim,
+                style = MaterialTheme.typography.titleMedium
+            )
             Text(
                 text = mahasiswa.kelas,
                 style = MaterialTheme.typography.titleMedium

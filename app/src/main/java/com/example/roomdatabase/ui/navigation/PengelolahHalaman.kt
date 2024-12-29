@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.roomdatabase.ui.view.DestinasiEntry
+import com.example.roomdatabase.ui.view.DestinasiEntry.EntryMhsScreen
 import com.example.roomdatabase.ui.view.DestinasiHome
-import com.example.roomdatabase.ui.view.EntryMhsScreen
 import com.example.roomdatabase.ui.view.HomeScreen
 
 @Composable

@@ -12,28 +12,34 @@ interface MahasiswaRepository{
     suspend fun getMahasiswaById(nim: String) : Mahasiswa
 }
 
-class NetworkMahasiswaRepository(mahasiswaService: MahasiswaService) : MahasiswaRepository {
+class NetworkMahasiswaRepository(
+    private val mahasiswaApiService: MahasiswaService
+) : MahasiswaRepository{
     override suspend fun insertMahasiswa(mahasiswa: Mahasiswa) {
         mahasiswaApiService.insertMahasiswa(mahasiswa)
     }
+
     override suspend fun updateMahasiswa(nim: String, mahasiswa: Mahasiswa) {
-        mahasiswaApiService.updateMahasiswa(nim, mahasiswa)
+        mahasiswaApiService.updateMahasiswa(nim,mahasiswa)
     }
+
     override suspend fun deleteMahasiswa(nim: String) {
         try {
             val response = mahasiswaApiService.deleteMahasiswa(nim)
-            if (!response.isSusccessful) {
+            if (!response.isSuccessful){
                 throw IOException("Failed to delete mahasiswa. HTTP Status code: ${response.code()}")
-            } else {
+            }else{
                 response.message()
                 println(response.message())
             }
-        } catch (e:Exception){
+        }catch (e:Exception){
             throw e
         }
     }
+
     override suspend fun getMahasiswa(): List<Mahasiswa> = mahasiswaApiService.getMahasiswa()
     override suspend fun getMahasiswaById(nim: String): Mahasiswa {
-        return mahasiswaApiService.getMahasiswaById(nim)
-    }
+        return mahasiswaApiService.getMahasiswaById("nim")
+        }
+
 }
