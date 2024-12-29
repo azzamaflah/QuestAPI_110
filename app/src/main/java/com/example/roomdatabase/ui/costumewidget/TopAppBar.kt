@@ -47,5 +47,3 @@ fun CustomTopAppBar(
         }
     )
 }
-
-}
