@@ -10,6 +10,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -125,8 +129,9 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
+            modifier = Modifier.size(200.dp),
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null
+            contentDescription = stringResource(R.string.loading_failed)
         )
         Text(
             text = stringResource(R.string.loading_failed),
@@ -144,7 +149,7 @@ fun EmptyData(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Tidak ada data Kontak")
+        Text(text = "Tidak ada data")
     }
 }
 
@@ -178,6 +183,8 @@ fun MhsCard(
     modifier: Modifier = Modifier,
     onDeleteClick: (Mahasiswa) -> Unit = {}
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -196,7 +203,7 @@ fun MhsCard(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = { onDeleteClick(mahasiswa) }) {
+                IconButton(onClick = { showDialog = true }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null
@@ -216,5 +223,33 @@ fun MhsCard(
                 style = MaterialTheme.typography.titleMedium
             )
         }
+    }
+
+    // AlertDialog untuk konfirmasi hapus
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(text = "Konfirmasi Hapus")
+            },
+            text = {
+                Text("Apakah Anda yakin ingin menghapus mahasiswa ini?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteClick(mahasiswa) // Memanggil onDeleteClick jika "Confirm"
+                        showDialog = false
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Batal")
+                }
+            }
+        )
     }
 }
